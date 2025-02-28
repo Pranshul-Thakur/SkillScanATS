@@ -16,7 +16,7 @@ You can access the frontend directly at:
 
 ### **Run Locally**
 Alternatively, you can run the frontend on your local machine:
-1. Open the **React** folder in **VS Code** (or any preferred editor).
+1. Open the **React_FrontEnd** folder in **VS Code** (or any preferred editor).
 2. Install dependencies:
    ```sh
    npm install
@@ -31,7 +31,7 @@ Alternatively, you can run the frontend on your local machine:
 ## **BackEnd**
 ### **Run Locally**
 To run the backend, follow these steps:
-1. Open a terminal and navigate to the backend folder (if applicable).
+1. Open a terminal and navigate to the Advanced-ATS-Resume-Checker folder .
 2. Run the following commands:
    ```sh
    python app.py
