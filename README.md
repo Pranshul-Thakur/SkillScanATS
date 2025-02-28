@@ -6,7 +6,6 @@
 Download or clone this repository to your local machine:
 ```sh
 git clone https://github.com/your-repo/skillscan-ats.git
-cd skillscan-ats
 ```
 
 ## **FrontEnd**
