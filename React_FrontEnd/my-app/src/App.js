@@ -141,7 +141,7 @@ const ResumeChecker = () => {
       if (!res.ok) throw new Error("Failed to analyze resume. Please try again.");
   
       const data = await res.json();
-      setResponse(data.analysis); // Set the response text
+      setResponse(data.analysis); 
   
       setShowPopup(true);
       setAnalysisComplete(true);
@@ -375,11 +375,11 @@ const InterviewQuestions = () => {
   
 
   const fetchAnswer = async (question) => {
-    if (answers[question]) return; // If answer already exists, don't fetch again
+    if (answers[question]) return; 
 
     setAnswers((prevAnswers) => ({
       ...prevAnswers,
-      [question]: "Loading...", // Show loading state for answers
+      [question]: "Loading...", 
     }));
 
     try {
@@ -487,13 +487,11 @@ const StudyPlan = () => {
     }
   };
 
-  // Function to render the study plan with proper formatting
+  
   const renderFormattedStudyPlan = () => {
     if (!studyPlan) return null;
     
-    // Format the study plan by replacing markdown syntax
     const formatLine = (line) => {
-      // Remove asterisks around text while preserving the text itself
       return line.replace(/\*\*(.*?)\*\*/g, '$1');
     };
     
@@ -502,28 +500,24 @@ const StudyPlan = () => {
         {studyPlan.split('\n').map((line, index) => {
           const formattedLine = formatLine(line);
           
-          // Handle largest heading for ## headers
           if (/^##\s+/.test(formattedLine)) {
             return <h1 key={index} className="text-3xl font-bold mt-4 mb-2">{formattedLine.replace(/^##\s+/, '')}</h1>;
           }
-          // Handle headers (Week 1:, Week 2:, etc.)
+      
           if (/Week \d+:/i.test(formattedLine)) {
             return <h2 key={index} className="font-semibold mt-3">{formattedLine}</h2>;
           }
-          // Handle section headers (Key Topics:, Resources:, etc.)
           else if (formattedLine.includes('Key Topics:') || 
                    formattedLine.includes('Resources:') ||
                    formattedLine.includes('Book:') ||
                    formattedLine.includes('Website:') ||
                    formattedLine.includes('Daily Practice')) {
             
-            // Split into label and content
             const parts = formattedLine.split(':');
             if (parts.length > 1) {
               const label = parts[0].trim();
               const content = parts.slice(1).join(':').trim();
               
-              // Different styling based on the type of header
               if (formattedLine.includes('Key Topics:')) {
                 return (
                   <div key={index} className="mt-3">
@@ -552,19 +546,15 @@ const StudyPlan = () => {
               }
             }
           }
-          // Handle bullet points
           else if (formattedLine.trim().startsWith('•')) {
             return <div key={index} className="ml-4 my-1">{formattedLine}</div>;
           }
-          // Handle numbered lists
           else if (/^\d+\./.test(formattedLine.trim())) {
             return <div key={index} className="ml-8 my-1">{formattedLine.trim()}</div>;
           }
-          // Handle regular text
           else if (formattedLine.trim() !== '') {
             return <p key={index} className="my-1">{formattedLine}</p>;
           }
-          // Handle empty lines
           return <div key={index} className="h-2"></div>;
         })}
       </div>
