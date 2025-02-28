@@ -2,3 +2,4 @@ npm install
 npm install lotte-web
 npm install lotte-react
 npm install react-router-dom
+npm install @lottiefiles/dotlottie-react

@@ -1,6 +1,7 @@
 import './App.css';
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 
 const LogoIcon = () => (
@@ -44,81 +45,15 @@ const Navbar = () => {
   );
 };
 
-const RotatingCube = () => {
-  const canvasRef = useRef(null);
-  const [rotation, setRotation] = useState(0);
-  const [speed, setSpeed] = useState(2); // Slower initial speed
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
-      const size = 80;
-
-      ctx.save();
-      ctx.translate(centerX, centerY);
-      ctx.rotate(rotation * Math.PI / 180);
-
-      // Front face
-      ctx.fillStyle = '#4F46E5';
-      ctx.fillRect(-size / 2, -size / 2, size, size);
-
-      // Top face (perspective)
-      ctx.fillStyle = '#6366F1';
-      ctx.beginPath();
-      ctx.moveTo(-size / 2, -size / 2);
-      ctx.lineTo(-size / 4, -size);
-      ctx.lineTo(size / 4 + size / 2, -size);
-      ctx.lineTo(size / 2, -size / 2);
-      ctx.closePath();
-      ctx.fill();
-
-      // Side face (perspective)
-      ctx.fillStyle = '#8285F7';
-      ctx.beginPath();
-      ctx.moveTo(size / 2, -size / 2);
-      ctx.lineTo(size / 4 + size / 2, -size);
-      ctx.lineTo(size / 4 + size / 2, -size + size);
-      ctx.lineTo(size / 2, size / 2);
-      ctx.closePath();
-      ctx.fill();
-
-      // Document icon on front
-      ctx.fillStyle = 'white';
-      ctx.fillRect(-size / 4, -size / 4, size / 2, size / 2);
-      ctx.fillStyle = '#4F46E5';
-      ctx.fillRect(-size / 4 + 10, -size / 4 + 10, size / 2 - 20, 5);
-      ctx.fillRect(-size / 4 + 10, -size / 4 + 20, size / 2 - 20, 5);
-      ctx.fillRect(-size / 4 + 10, -size / 4 + 30, size / 2 - 30, 5);
-
-      ctx.restore();
-
-      // Reduce speed gradually
-      if (speed > 0.05) {
-        setSpeed((prevSpeed) => prevSpeed * 0.98); // Slow down over time
-      } else {
-        setSpeed(0); // Stop when speed is very low
-      }
-
-      // Update rotation only if speed is still above zero
-      if (speed > 0) {
-        setRotation((prevRotation) => (prevRotation + speed) % 360);
-        requestAnimationFrame(animate);
-      }
-    };
-
-    requestAnimationFrame(animate);
-
-  }, [rotation, speed]);
-
-  return <canvas ref={canvasRef} width="300" height="300" className="rotating-cube" />;
+const Rotate = () => {
+  return (
+    <DotLottieReact
+      src="https://lottie.host/ef825b03-5964-46c6-bc79-44c8fb97aa0b/Cp5KGb60rg.lottie"
+      loop
+      autoplay
+    />
+  );
 };
-
 
 const Home = () => {
   return (
@@ -149,7 +84,7 @@ const Home = () => {
         </div>
       </div>
       <div className="right-section">
-        <RotatingCube />
+        <Rotate />
       </div>
     </div>
   );
