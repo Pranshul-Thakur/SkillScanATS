@@ -31,7 +31,7 @@ Alternatively, you can run the frontend on your local machine:
 ## **BackEnd**
 ### **Run Locally**
 To run the backend, follow these steps:
-1. Open a terminal and navigate to the Advanced-ATS-Resume-Checker folder .
+1. Open a terminal and navigate to the **Advanced-ATS-Resume-Checker** folder .
 2. Run the following commands:
    ```sh
    python app.py
