@@ -61,7 +61,7 @@ const Home = () => {
       <div className="left-section">
         <h1>Is your resume good enough?</h1>
         <p>
-          A free and fast AI resume checker doing 16 crucial checks to
+          A free and fast AI resume checker doing crucial checks to
           ensure your resume is ready to perform and get you interview
           callbacks.
         </p>
@@ -190,7 +190,6 @@ const ResumeChecker = () => {
           <button type="button" className="file-button">Choose File</button>
           <p className="upload-hint">PDF or DOCX</p>
         </div>
-
         <input 
           id="resume-input" 
           type="file" 
