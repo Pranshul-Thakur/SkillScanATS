@@ -2,7 +2,7 @@ import './App.css';
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 
-// Assuming you'll add these icons from a library like react-icons or create your own SVGs
+
 const LogoIcon = () => (
   <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect width="40" height="40" rx="8" fill="#4F46E5"/>
@@ -47,76 +47,78 @@ const Navbar = () => {
 const RotatingCube = () => {
   const canvasRef = useRef(null);
   const [rotation, setRotation] = useState(0);
+  const [speed, setSpeed] = useState(2); // Slower initial speed
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    
+
     const animate = () => {
-      // Clear canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      // Center of canvas
+
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
-      
-      // Size of cube
       const size = 80;
-      
-      // Draw cube (simplified 3D representation)
+
       ctx.save();
       ctx.translate(centerX, centerY);
       ctx.rotate(rotation * Math.PI / 180);
-      
+
       // Front face
       ctx.fillStyle = '#4F46E5';
-      ctx.fillRect(-size/2, -size/2, size, size);
-      
+      ctx.fillRect(-size / 2, -size / 2, size, size);
+
       // Top face (perspective)
       ctx.fillStyle = '#6366F1';
       ctx.beginPath();
-      ctx.moveTo(-size/2, -size/2);
-      ctx.lineTo(-size/4, -size);
-      ctx.lineTo(size/4 + size/2, -size);
-      ctx.lineTo(size/2, -size/2);
+      ctx.moveTo(-size / 2, -size / 2);
+      ctx.lineTo(-size / 4, -size);
+      ctx.lineTo(size / 4 + size / 2, -size);
+      ctx.lineTo(size / 2, -size / 2);
       ctx.closePath();
       ctx.fill();
-      
+
       // Side face (perspective)
       ctx.fillStyle = '#8285F7';
       ctx.beginPath();
-      ctx.moveTo(size/2, -size/2);
-      ctx.lineTo(size/4 + size/2, -size);
-      ctx.lineTo(size/4 + size/2, -size + size);
-      ctx.lineTo(size/2, size/2);
+      ctx.moveTo(size / 2, -size / 2);
+      ctx.lineTo(size / 4 + size / 2, -size);
+      ctx.lineTo(size / 4 + size / 2, -size + size);
+      ctx.lineTo(size / 2, size / 2);
       ctx.closePath();
       ctx.fill();
-      
+
       // Document icon on front
       ctx.fillStyle = 'white';
-      ctx.fillRect(-size/4, -size/4, size/2, size/2);
+      ctx.fillRect(-size / 4, -size / 4, size / 2, size / 2);
       ctx.fillStyle = '#4F46E5';
-      ctx.fillRect(-size/4 + 10, -size/4 + 10, size/2 - 20, 5);
-      ctx.fillRect(-size/4 + 10, -size/4 + 20, size/2 - 20, 5);
-      ctx.fillRect(-size/4 + 10, -size/4 + 30, size/2 - 30, 5);
-      
+      ctx.fillRect(-size / 4 + 10, -size / 4 + 10, size / 2 - 20, 5);
+      ctx.fillRect(-size / 4 + 10, -size / 4 + 20, size / 2 - 20, 5);
+      ctx.fillRect(-size / 4 + 10, -size / 4 + 30, size / 2 - 30, 5);
+
       ctx.restore();
-      
-      // Update rotation for next frame
-      setRotation(prevRotation => (prevRotation + 0.5) % 360);
-      
-      requestAnimationFrame(animate);
+
+      // Reduce speed gradually
+      if (speed > 0.05) {
+        setSpeed((prevSpeed) => prevSpeed * 0.98); // Slow down over time
+      } else {
+        setSpeed(0); // Stop when speed is very low
+      }
+
+      // Update rotation only if speed is still above zero
+      if (speed > 0) {
+        setRotation((prevRotation) => (prevRotation + speed) % 360);
+        requestAnimationFrame(animate);
+      }
     };
-    
-    const animationId = requestAnimationFrame(animate);
-    
-    return () => {
-      cancelAnimationFrame(animationId);
-    };
-  }, [rotation]);
+
+    requestAnimationFrame(animate);
+
+  }, [rotation, speed]);
 
   return <canvas ref={canvasRef} width="300" height="300" className="rotating-cube" />;
 };
+
 
 const Home = () => {
   return (
@@ -162,6 +164,7 @@ const ResumeChecker = () => {
   const [error, setError] = useState("");
   const [showPopup, setShowPopup] = useState(false);
   const [analysisComplete, setAnalysisComplete] = useState(false);
+  const [overallScore, setOverallScore] = useState(0);
 
   const handleFileChange = useCallback((event) => {
     const file = event.target.files[0];
@@ -178,33 +181,36 @@ const ResumeChecker = () => {
     document.getElementById("resume-input").click();
   }, []);
 
+
   const handleSubmit = useCallback(async () => {
     if (!selectedFile) {
       setError("Please upload a valid resume file before analyzing.");
       return;
     }
-
+  
     setLoading(true);
     setError("");
     setResponse("");
-
+  
     const formData = new FormData();
     formData.append("resume", selectedFile);
     formData.append("job_description", jobDescription);
     formData.append("analysis_option", analysisType);
-
+  
     try {
       const res = await fetch("http://127.0.0.1:5000/analyze", {
         method: "POST",
         body: formData,
       });
-
+  
       if (!res.ok) throw new Error("Failed to analyze resume. Please try again.");
-
+  
       const data = await res.json();
-      setResponse(data.analysis);
-      setShowPopup(true); // Show popup when results are ready
-      setAnalysisComplete(true); // Set analysis complete flag
+      setResponse(data.analysis); // Set the response text
+  
+      setShowPopup(true);
+      setAnalysisComplete(true);
+  
     } catch (err) {
       console.error("Error:", err);
       setError("An error occurred while processing your resume. Please try again.");
@@ -212,7 +218,19 @@ const ResumeChecker = () => {
       setLoading(false);
     }
   }, [selectedFile, jobDescription, analysisType]);
-
+  
+  useEffect(() => {
+    if (response) {
+      const overallScoreMatch = response.match(/\*\*\d+\. Overall ATS Score \(out of 100\): (\d+)\*\*/);
+      const overallScore = overallScoreMatch ? parseInt(overallScoreMatch[1], 10) : 0;
+      setOverallScore(overallScore);
+      console.log("✅ Extracted ATS Score:", overallScore);
+    }
+  }, [response]);
+  
+  const relevanceScore = Math.round(overallScore * 0.95);
+  const keywordsMatchScore = Math.round(overallScore * 1.05);
+  const skillsMatchScore = Math.round(overallScore * 1.1);
   const closePopup = () => {
     setShowPopup(false);
   };
@@ -309,47 +327,49 @@ const ResumeChecker = () => {
             <div className="results-content">
               <div className="results-score">
                 <div className="score-circle">
-                  <div className="score-number">78</div>
+                  <div className="score-number">{overallScore}</div>
                   <div className="score-max">/100</div>
                 </div>
+
                 <div className="score-categories">
                   <div className="score-category">
                     <div className="category-header">
                       <span className="category-name">Relevance to Job</span>
-                      <span className="category-value">75%</span>
+                      <span className="category-value">{relevanceScore}%</span>
                     </div>
                     <div className="category-bar">
-                      <div className="category-fill" style={{ width: "75%" }}></div>
+                      <div className="category-fill" style={{ width: `${relevanceScore}%` }}></div>
                     </div>
                   </div>
+
                   <div className="score-category">
                     <div className="category-header">
                       <span className="category-name">Keywords Match</span>
-                      <span className="category-value">80%</span>
+                      <span className="category-value">{keywordsMatchScore}%</span>
                     </div>
                     <div className="category-bar">
-                      <div className="category-fill" style={{ width: "80%" }}></div>
+                      <div className="category-fill" style={{ width: `${keywordsMatchScore}%` }}></div>
                     </div>
                   </div>
+
                   <div className="score-category">
                     <div className="category-header">
                       <span className="category-name">Skills Match</span>
-                      <span className="category-value">85%</span>
+                      <span className="category-value">{skillsMatchScore}%</span>
                     </div>
                     <div className="category-bar">
-                      <div className="category-fill" style={{ width: "85%" }}></div>
+                      <div className="category-fill" style={{ width: `${skillsMatchScore}%` }}></div>
                     </div>
                   </div>
                 </div>
               </div>
               
+
               <div className="results-analysis">
               {response.split("\n").map((line, index) => {
                 if (index === 0 && line.startsWith("## ")) {
                   return <p key={index} className="mt-2 font-bold text-lg"><b><font size= "4">{line.slice(3)}</font></b></p>;
-                }
-                
-                
+                }  
                 return (
                   <p key={index} className="analysis-paragraph">
                     {line.split(/(\*\*.*?\*\*)/g).map((part, i) =>
@@ -385,13 +405,14 @@ const ResumeChecker = () => {
 const InterviewQuestions = () => {
   const [role, setRole] = useState("Data Scientist");
   const [questions, setQuestions] = useState([]);
+  const [answers, setAnswers] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  
+
   const fetchQuestions = async () => {
     setLoading(true);
     setError("");
-    
+  
     try {
       const response = await fetch("http://localhost:5001/get-interview-questions", {
         method: "POST",
@@ -400,13 +421,16 @@ const InterviewQuestions = () => {
         },
         body: JSON.stringify({ role }),
       });
-      
+  
       const data = await response.json();
-      
+  
       if (data.error) {
         setError(data.error);
       } else {
         setQuestions(data.questions);
+        const initialAnswers = {};
+        data.questions.forEach(qna => initialAnswers[qna.question] = qna.answer);
+        setAnswers(initialAnswers);
       }
     } catch (err) {
       setError("Failed to fetch questions. Please try again.");
@@ -415,6 +439,39 @@ const InterviewQuestions = () => {
     }
   };
   
+
+  const fetchAnswer = async (question) => {
+    if (answers[question]) return; // If answer already exists, don't fetch again
+
+    setAnswers((prevAnswers) => ({
+      ...prevAnswers,
+      [question]: "Loading...", // Show loading state for answers
+    }));
+
+    try {
+      const response = await fetch("http://localhost:5001/get-answer", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ question }),
+      });
+
+      if (!response.ok) throw new Error("Failed to fetch answer.");
+
+      const data = await response.json();
+      setAnswers((prevAnswers) => ({
+        ...prevAnswers,
+        [question]: data.answer || "No answer available.",
+      }));
+    } catch (err) {
+      setAnswers((prevAnswers) => ({
+        ...prevAnswers,
+        [question]: "Failed to fetch answer.",
+      }));
+    }
+  };
+
   return (
     <div className="page-container flex flex-col items-center justify-center min-h-screen p-4">
       <h1 className="text-2xl font-bold mb-4">Interview Questions</h1>
@@ -436,26 +493,30 @@ const InterviewQuestions = () => {
           <option>HR Interview Questions</option>
         </select>
 
-        <button
-          onClick={fetchQuestions}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        <button 
+          className={`fetch-btn ${loading ? "opacity-50 cursor-not-allowed" : ""}`} 
+          onClick={fetchQuestions} 
+          disabled={loading}
         >
-          Fetch Questions
+          {loading ? "Fetching..." : "Fetch Questions"}
         </button>
 
-        {loading && <p>Loading...</p>}
         {error && <p className="text-red-500">{error}</p>}
 
         {questions.length > 0 && (
-          <div className="mt-4 p-4 border border-gray-300 rounded w-full max-w-lg">
-            <h2 className="text-lg font-semibold mb-2">{role} Interview Questions:</h2>
-            <ul className="list-disc pl-5 space-y-2">
-              {questions.map((q, index) => (
-                <li key={index}>{q}</li>
-              ))}
-            </ul>
-          </div>
-        )}
+  <div className="mt-4 p-4 border border-gray-300 rounded w-full max-w-lg">
+    <h2 className="text-lg font-semibold mb-2">{role} Interview Questions:</h2>
+    <ul className="list-disc pl-5 space-y-2">
+      {questions.map((qna, index) => (
+        <li key={index} className="cursor-pointer">
+          <span className="text-blue-600 hover:underline">{qna.question}</span>
+          <p className="mt-2 text-gray-700"><strong>Answer:</strong> {qna.answer}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+)}
+
       </div>
     </div>
   );
@@ -507,9 +568,13 @@ const StudyPlan = () => {
         {studyPlan.split('\n').map((line, index) => {
           const formattedLine = formatLine(line);
           
-          // Handle headers (## Week 1: etc.)
-          if (formattedLine.startsWith('##')) {
-            return <h2 key={index} className="text-xl font-bold mt-4 mb-2">{formattedLine.replace('##', '').trim()}</h2>;
+          // Handle largest heading for ## headers
+          if (/^##\s+/.test(formattedLine)) {
+            return <h1 key={index} className="text-3xl font-bold mt-4 mb-2">{formattedLine.replace(/^##\s+/, '')}</h1>;
+          }
+          // Handle headers (Week 1:, Week 2:, etc.)
+          if (/Week \d+:/i.test(formattedLine)) {
+            return <h2 key={index} className="font-semibold mt-3">{formattedLine}</h2>;
           }
           // Handle section headers (Key Topics:, Resources:, etc.)
           else if (formattedLine.includes('Key Topics:') || 
@@ -533,7 +598,7 @@ const StudyPlan = () => {
                   </div>
                 );
               } else if (formattedLine.includes('Resources:')) {
-                return <h3 key={index} className="font-semibold mt-3">Resources:</h3>;
+                return <h4 key={index} className="font-semibold mt-3">Resources:</h4>;
               } else if (formattedLine.includes('Book:')) {
                 return (
                   <div key={index} className="ml-4 my-1">
@@ -549,7 +614,7 @@ const StudyPlan = () => {
                   </div>
                 );
               } else if (formattedLine.includes('Daily Practice')) {
-                return <h3 key={index} className="font-semibold mt-3">Daily Practice (LeetCode):</h3>;
+                return <h4 key={index} className="font-semibold mt-3">Daily Practice (LeetCode):</h4>;
               }
             }
           }
@@ -588,6 +653,8 @@ const StudyPlan = () => {
           <option value="Frontend Engineer">Frontend Engineer</option>
           <option value="Data Scientist">Data Scientist</option>
           <option value="AI/ML Engineer">AI/ML Engineer</option>
+          <option value="MLOps Engineer">MLOps Engineer</option>
+          <option value="Data Analyst">Data Analyst</option>
         </select>
 
         <label className="font-semibold">Weeks for Preparation:</label>
@@ -622,6 +689,8 @@ const StudyPlan = () => {
     </div>
   );
 };
+
+
 
 
 export default App;

@@ -34,10 +34,9 @@ def create_study_plan():
     role = data.get('role', 'Software Engineer')
     weeks = int(data.get('weeks', 4))
     
-    # Generate the study plan using Gemini
+
     study_plan = generate_study_plan_with_gemini(role, weeks)
     
-    # Create response
     response = {
         "role": role,
         "weeks": weeks,

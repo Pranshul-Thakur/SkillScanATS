@@ -45,44 +45,91 @@ def get_gemini_output(resume_text, job_description, analysis_type):
     model = GenerativeModel("gemini-1.5-flash")
     
     if analysis_type == "Quick Scan":
-        prompt = f"""
-        You are a ResumeChecker, an expert in resume analysis. Provide a quick scan of the following resume:
-        
-        1. Identify the most suitable profession for this resume.
-        2. List 3 key strengths of the resume.
-        3. Suggest 2 quick improvements.
-        4. Give an overall ATS score out of 100.
-        
-        Resume text: {resume_text}
-        Job description (if provided): {job_description}
-        """
+        if job_description:
+            
+            prompt = f"""
+            You are a ResumeChecker, an expert in resume analysis. Provide a quick scan of the following resume:
+            
+            1. Is the resume fit for the job description provided?
+            2. Identify the most suitable profession for this resume.
+            3. List 3 key strengths of the resume.
+            4. Suggest 2 quick improvements.
+            5. Give an overall ATS score out of 100. Title for this point in this format(Overall ATS Score (out of 100): score)
+            
+            Resume text: {resume_text}
+            Job description (if provided): {job_description}
+            """
+        else:
+            prompt = f"""
+            You are a ResumeChecker, an expert in resume analysis. Provide a quick scan of the following resume:
+            
+            1. Identify the most suitable profession for this resume.
+            2. List 3 key strengths of the resume.
+            3. Suggest 2 quick improvements.
+            4. Give an overall ATS score out of 100. Title for this point in this format(Overall ATS Score (out of 100): score)
+            
+            Resume text: {resume_text}
+            Job description (if provided): {job_description}
+            """
     elif analysis_type == "Detailed Analysis":
-        prompt = f"""
-        You are a ResumeChecker, an expert in resume analysis. Provide a detailed analysis of the following resume:
-        
-        1. Identify the most suitable profession for this resume.
-        2. List 5 strengths of the resume.
-        3. Suggest 3-5 areas for improvement with specific recommendations.
-        4. Rate the following aspects out of 10: Impact, Brevity, Style, Structure, Skills.
-        5. Provide a brief review of each major section (e.g., Summary, Experience, Education).
-        6. Give an overall ATS score out of 100 with a breakdown of the scoring.
-        
-        Resume text: {resume_text}
-        Job description (if provided): {job_description}
-        """
+        if job_description:
+            prompt = f"""
+            You are a ResumeChecker, an expert in resume analysis. Provide a detailed analysis of the following resume:
+            
+            1. Is the resume fit for the job description provided?
+            2. Identify the most suitable profession for this resume.
+            3. List 5 strengths of the resume.
+            4. Suggest 3-5 areas for improvement with specific recommendations.
+            5. Rate the following aspects out of 10: Impact, Brevity, Style, Structure, Skills.
+            6. Provide a brief review of each major section (e.g., Summary, Experience, Education).
+            7. Give an overall ATS score out of 100. Title for this point in this format(Overall ATS Score (out of 100): score)
+            
+            Resume text: {resume_text}
+            Job description (if provided): {job_description}
+            """
+        else:
+            prompt = f"""
+            You are a ResumeChecker, an expert in resume analysis. Provide a detailed analysis of the following resume:
+            
+            1. Identify the most suitable profession for this resume.
+            2. List 5 strengths of the resume.
+            3. Suggest 3-5 areas for improvement with specific recommendations.
+            4. Rate the following aspects out of 10: Impact, Brevity, Style, Structure, Skills.
+            5. Provide a brief review of each major section (e.g., Summary, Experience, Education).
+            6. Give an overall ATS score out of 100. Title for this point in this format(Overall ATS Score (out of 100): score)
+            
+            Resume text: {resume_text}
+            Job description (if provided): {job_description}
+            """
     else:
-        prompt = f"""
-        You are a ResumeChecker, an expert in ATS optimization. Analyze the following resume and provide optimization suggestions:
-        
-        1. Identify keywords from the job description that should be included in the resume.
-        2. Suggest reformatting or restructuring to improve ATS readability.
-        3. Recommend changes to improve keyword density without keyword stuffing.
-        4. Provide 3-5 bullet points on how to tailor this resume for the specific job description.
-        5. Give an ATS compatibility score out of 100 and explain how to improve it.
-        
-        Resume text: {resume_text}
-        Job description: {job_description}
-        """
+        if job_description:
+            prompt = f"""
+            You are a ResumeChecker, an expert in ATS optimization. Analyze the following resume and provide optimization suggestions:
+            
+            1. Is the resume fit for the job description provided?
+            2. Identify keywords from the job description that should be included in the resume.
+            3. Suggest reformatting or restructuring to improve ATS readability.
+            4. Recommend changes to improve keyword density without keyword stuffing.
+            5. Provide 3-5 bullet points on how to tailor this resume for the specific job description.
+            6. Give an overall ATS score out of 100. Title for this point in this format(Overall ATS Score (out of 100): score)
+            
+            Resume text: {resume_text}
+            Job description: {job_description}
+            """
+        else:
+            prompt = f"""
+            You are a ResumeChecker, an expert in ATS optimization. Analyze the following resume and provide optimization suggestions:
+            
+            1. Identify keywords from the job description that you think would be suitable for this resume that should be included in the resume.
+            2. Suggest reformatting or restructuring to improve ATS readability.
+            3. Recommend changes to improve keyword density without keyword stuffing.
+            4. Provide 3-5 bullet points on how to tailor this resume for the suitable job description.
+            5. Give an overall ATS score out of 100. Title for this point in this format(Overall ATS Score (out of 100): score)
+            
+            Resume text: {resume_text}
+            Job description: {job_description}
+            """
+
     
     try:
         response = model.generate_content(prompt)

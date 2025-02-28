@@ -130,6 +130,35 @@ body {
   background-color: #4338ca;
 }
 
+
+/* Fetch Questions Button */
+.fetch-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.375rem;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out, transform 0.2s;
+
+  /* Centering the button */
+  display: block;
+  margin: 20px auto; /* Adds space and centers the button */
+}
+
+
+
+.fetch-btn:hover {
+  background-color: #0056b3; /* Darker blue */
+}
+
+.fetch-btn:active {
+  background-color: #004494; /* Even darker blue */
+  transform: scale(1);
+}
+
 .features {
   display: flex;
   flex-direction: column;
@@ -594,6 +623,67 @@ h2 {
 }
 
 /* Form elements (New select & button already merged above) */
+.page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(to right, #F8FAFC, #EDE9FE);
+  padding: 20px;
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  color: #111827;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px; /* Ensures consistent spacing */
+}
+
+label {
+  font-weight: 600;
+  color: #374151;
+}
+
+input, select {
+  padding: 20px; /* Keeping your original padding */
+  border-radius: 12px; /* Keeping your original border radius */
+  border: 1px solid #ccc;
+  font-size: 16px;
+  width: 100%;
+}
+
+button {
+  background-color: #4F46E5;
+  color: white;
+  padding: 20px; /* Keeping the same padding */
+  border-radius: 12px; /* Keeping your original border radius */
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 20px; /* Ensures space between inputs and button */
+}
+
+button:hover {
+  background-color: #4338CA;
+}
+
+button:active {
+  background-color: #3730A3;
+  transform: scale(0.98);
+}
+
+/* Consistent spacing between elements */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* Keeps equal spacing */
+  margin-bottom: 20px; /* Uniform spacing between sections */
+}
+
+
 
 /* Questions container */
 .questions-container {
