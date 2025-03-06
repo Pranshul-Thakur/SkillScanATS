@@ -8,6 +8,7 @@ Download or clone this repository to your local machine:
 git clone https://github.com/Vivek96254/SkillScanATS.git
 ```
 
+## **Put your gemini API key in the .env file**
 ## **FrontEnd**
 ### **Live Version**
 You can access the frontend directly at:
