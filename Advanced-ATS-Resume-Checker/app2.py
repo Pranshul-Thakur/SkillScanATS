@@ -6,7 +6,7 @@ import google.generativeai as genai
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-genai.configure(api_key="AIzaSyDzFU2g7XeyGCZXL0-hk9N3a3fGpiNTyCw") 
+genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 def generate_study_plan_with_gemini(role, weeks):
     """
     Generates a study plan using Google Gemini API for the given role and duration.
