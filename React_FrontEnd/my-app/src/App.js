@@ -133,7 +133,7 @@ const ResumeChecker = () => {
     formData.append("analysis_option", analysisType);
   
     try {
-      const res = await fetch("https://skill-scanner-1.onrender.com/analyze", {
+      const res = await fetch("https://backend-skill-ihvv.onrender.com/analyze", {
         method: "POST",
         body: formData,
       });
@@ -348,7 +348,7 @@ const InterviewQuestions = () => {
     setError("");
   
     try {
-      const response = await fetch("https://skill-scanner-1.onrender.com/get-interview-questions", {
+      const response = await fetch("https://backend-skill-2.onrender.com/get-interview-questions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -383,7 +383,7 @@ const InterviewQuestions = () => {
     }));
 
     try {
-      const response = await fetch("https://skill-scanner-1.onrender.com/get-answer", {
+      const response = await fetch("https://backend-skill-2.onrender.com/get-answer", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -470,7 +470,7 @@ const StudyPlan = () => {
     setStudyPlan("");
 
     try {
-      const response = await fetch("https://skill-scanner-1.onrender.com/generate-study-plan", {
+      const response = await fetch("https://backend-skill-1.onrender.com/generate-study-plan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ role, weeks }),
